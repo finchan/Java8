@@ -21,6 +21,17 @@ public class FilteringApples {
         return result;
     }
 
+    //更加深入的抽象（泛型）
+    public static <T> List<T> filter(List<T> list, Predicate<T> p) {
+        List<T> result = new ArrayList();
+        for(T t: list) {
+            if(p.test(t)) {
+                result.add(t);
+            };
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         List<Apple> inventory = Arrays.asList(new Apple(80,"green"),
                 new Apple(155, "green"), new Apple(120, "red"));
@@ -33,13 +44,21 @@ public class FilteringApples {
 
         List<Apple> redAndHeavyApples = filterApples(inventory, new AppleRedAndHeavyPredicate());
         System.out.println(redAndHeavyApples);
-
+        //使用匿名类
         List<Apple> redApples = filterApples(inventory, new ApplePredicate() {
             @Override
             public boolean test(Apple apple) {
                 return "red".equals(apple.getColor());
             }
         });
+        //Lambda表达式
+        List<Apple> result = filterApples(inventory, (Apple apple) -> "red".equals(apple.getColor()));
+        System.out.println(result);
         System.out.println(redApples);
+
+        List<Apple> genericRedApples = filter(inventory, (Apple apple) ->"red".equals(apple.getColor()));
+        System.out.println(genericRedApples);
+        List<Integer> genericIntegersFilter = filter(Arrays.asList(1, 2, 3,4, 5), (Integer i) -> i%2==0);
+        System.out.println(genericIntegersFilter);
     }
 }
